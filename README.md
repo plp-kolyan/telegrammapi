@@ -14,6 +14,9 @@ pip install -r requirements.txt
     Django     5.1
     Jinja2     3.1.4
     Telethon   1.36.0
+    aiodns     3.2.0
+    aiohttp    3.10.5
+
 
 
 
