@@ -7,8 +7,31 @@ from message.models import Api, Answer, Mess, BotMess, ButtonsRow, Button, Clien
 from jinja2 import Template
 from django.db.models import Q
 from serveses_config import api_id, api_hash, bot_token, sender_id
-
+import aiohttp
 telegramm = {"ButtonInline": custom.Button.inline}
+
+async def get_user_info(bot, user_id):
+    user = await bot.get_entity(user_id)
+    kwargs = {}
+    for field in ['first_name', 'last_name', 'username', 'phone']:
+        value = getattr(user, field)
+        if value is not None:
+            kwargs.update({field: value})
+    return kwargs
+
+async def get_response_json(url, payload, headers, method):
+    metods = {
+        'get': 'params',
+        'post': 'json',
+    }
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with getattr(session, method)(url, headers=headers, **{metods[method]: payload}) as resp:
+                response_json = await resp.json()
+        except Exception:
+            response_json = {'error': 'Ошибка вызвавшая исключение'}
+
+    return response_json
 
 
 async def get_message(id_answer):
@@ -45,7 +68,7 @@ async def update_messages_all_context(button_django, user_id, bot):
 
 async def event_reply(bot, answer, user_id, parrent, button_django):
     if answer:
-        botmess = await create_botmess_dj(answer, user_id, parrent, button_django)
+        botmess = await create_botmess_dj(answer, user_id, parrent, button_django, bot)
 
         if button_django:
             # print(f'answer == button_django.answer {answer == button_django.answer}')
@@ -120,22 +143,15 @@ async def get_message_kwargs(botmess_id):
 
 
 
-async def create_botmess_dj(answer, user_id, parrent, button_django):
+async def create_botmess_dj(answer, user_id, parrent, button_django, bot):
     message = {"text": None, "context": None}
     response_json = {}
     buttons_list = []
     payload = button_django.payload if button_django else {}
     payload_internal = button_django.payload_internal if button_django else {}
+    user = await get_user_info(bot, user_id)
 
 
-
-    if answer.api:
-        """выполняем запрос"""
-        if not payload:
-            template = Template(answer.api.body)
-            template.render(user_id=user_id, payload={})
-
-        response_json = answer.api.response_json_test
     context = None
     if answer.context == 'new':
         context = await Context.objects.acreate()
@@ -147,6 +163,15 @@ async def create_botmess_dj(answer, user_id, parrent, button_django):
                 context = await Context.objects.acreate()
         else:
             context = await Context.objects.acreate()
+    if answer.api:
+        """выполняем запрос"""
+        # if not payload:
+        template = Template(answer.api.body)
+        template.render(user=user, payload=payload, context=context.payload if context else {})
+        print(response_json)
+        response_json = await get_response_json(answer.api.url, payload, answer.api.headers, answer.api.method)
+
+
     if answer.template == '':
         async for ans in Answer.objects.filter(parrent=answer):
             buttons_list.append([
@@ -161,11 +186,11 @@ async def create_botmess_dj(answer, user_id, parrent, button_django):
         message.update({'text': answer.text})
     else:
         template = Template(answer.template)
-        template.render(button_kwargs=buttons_list, response_json=response_json,
+        template.render(user=user, button_kwargs=buttons_list, response_json=response_json,
                         payload=payload, payload_internal=payload_internal, message=message, context=context.payload if context else {})
     if context: await context.asave(update_fields=["payload"])
     message_template = Template(answer.text)
-    message_text = message_template.render(context=context.payload if context else {})
+    message_text = message_template.render(user=user, response_json=response_json, context=context.payload if context else {})
 
     if message["text"] is None:
         message["text"] = answer.text
@@ -378,16 +403,9 @@ def start_bot():
 
         @bot.on(events.NewMessage(pattern='/start'))
         async def start_handler(event):
-            user = await bot.get_entity(event.message.peer_id.user_id)
-            kwargs = {}
-            for field in ['first_name', 'last_name', 'username', 'phone']:
-                value = getattr(user, field)
-                if value is not None:
-                    kwargs.update({field: value})
-            print(kwargs)
-            print(user.first_name)
-
-            await TelegrammUser.objects.aget_or_create(user_id=user.id, **kwargs)
+            user_id = event.message.peer_id.user_id
+            kwargs = await get_user_info(bot, user_id)
+            await TelegrammUser.objects.aget_or_create(user_id=user_id, **kwargs)
             # await bot.send_message(user.id, "Приветствуем вам в нашем боте",
             #                        buttons=[[custom.Button.text('/start')]])
 
@@ -395,9 +413,8 @@ def start_bot():
         async def user_input(event):
             # print(event.message.peer_id.user_id)
             # print(event.message)
-            print(
-                  )
-            bot_mess = await BotMess.objects.select_related('answer__answer_to_answer', 'context'
+            delete_messages = [event.message.id]
+            bot_mess = await BotMess.objects.select_related('answer__answer_to_answer__api', "answer__api", 'context'
                                                                  ).filter(user_id=event.message.peer_id.user_id).alast()
             answer = bot_mess.answer
             if answer.do_with_user_input:
@@ -406,9 +423,11 @@ def start_bot():
 
                 await bot_mess.context.asave(update_fields=["payload"])
                 if answer.answer_to_answer:
-                    await bot.delete_messages(event.message.peer_id.user_id,
-                                              message_ids=[bot_mess.msg_id, event.message.id])
+                    delete_messages.append(bot_mess.msg_id)
                     await event_reply(bot, answer.answer_to_answer, event.message.peer_id.user_id, bot_mess, None)
+
+            await bot.delete_messages(event.message.peer_id.user_id,
+                                      message_ids=delete_messages)
 
 
             # if event.message.reply_to:

@@ -18,13 +18,13 @@ def get_update_api_default():
 
 class Api(models.Model):
     TYPES = {
-        'p': "post",
-        'g': "get",
+        'post': "post",
+        'get': "get",
     }
     name = models.CharField(max_length=250, verbose_name='Название метода')
     url = models.CharField(max_length=250, verbose_name='Url', blank=True, null=True)
-    method = models.CharField(max_length=250, verbose_name='Метод', blank=True, null=True)
-    header = models.TextField(verbose_name='Заголовки запроса headers', blank=True, null=True)
+    headers = models.JSONField(verbose_name='headers', default=get_update_api_default, null=True, blank=True)
+    method = models.CharField(max_length=250, verbose_name='Метод', choices=TYPES, blank=True, null=True)
     body = models.TextField(verbose_name='Тело запроса', help_text="username - юзернаим пользователя в тг, message - сообщение", blank=True, null=True)
 
     response_json_test = models.JSONField(verbose_name='Пример тестового JSON ответа', default=get_update_api_default, null=True, blank=True)
@@ -39,10 +39,12 @@ class Answer(models.Model):
         'null': "Нет",
     }
     # clien_qw = models.CharField(max_length=250, verbose_name='Вопрос клиента')
-    text = models.TextField(verbose_name='Текст сообщения')
-    template = models.TextField(verbose_name='Шаблон ответа', blank=True, default='')
-    do_with_user_input = models.TextField(verbose_name='Делать с пользовательским вводом', blank=True, default='')
-    forward = models.TextField(verbose_name='Переслать', blank=True, default='')
+    text = models.TextField(verbose_name='Текст сообщения', help_text="user(first_name, last_name, username, phone), context, response_json")
+    template = models.TextField(verbose_name='Шаблон ответа',
+                                help_text="user, button_kwargs, response_json, payload, payload_internal, message, context",
+                                blank=True, default='')
+    do_with_user_input = models.TextField(verbose_name='Делать с пользовательским вводом', blank=True, default='', help_text='context, message')
+    forward = models.TextField(verbose_name='Переслать', blank=True, default='', help_text="select_payload",)
     api = models.ForeignKey(Api, on_delete=models.SET_NULL, max_length=250, verbose_name='Ответ из апи', blank=True, null=True)
     context = models.CharField(verbose_name='Правило контекста', max_length=250, choices=CONTEXT_TYPES, default='parrent')
     parrent = models.ForeignKey('Answer', on_delete=models.SET_NULL,

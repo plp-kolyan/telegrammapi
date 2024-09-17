@@ -1,10 +1,16 @@
 import json
+import sys
 from unittest import TestCase
 from test_config import *
 from message.serveses import *
 from message.models import Api
 import asyncio
 from unittest import IsolatedAsyncioTestCase
+import aiohttp
+from serveses_config import url, headers
+
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 
 class DevTestCase(TestCase):
     def test_0(self):
@@ -354,6 +360,26 @@ class Test(IsolatedAsyncioTestCase):
          (Button.objects.filter(buttonsrow__botmess__context=context, select=True)
           .filter(**{f'payload_internal__has_key': button_django.collect_in_context}).values_list('payload_internal',
                                                                                                    flat=True))])
+
+
+    async def test_16(self):
+        print(sys.platform)
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get('https://api.github.com/events') as resp:
+                print(await resp.json())
+
+
+    async def test_17(self):
+        payload = {"date_gte": "12.09.2024", "date_lte": "13.09.2024"}
+        method = 'get'
+        print(await get_response_json(url, payload, headers, method))
+
+
+
+
+
+
 
 
 
