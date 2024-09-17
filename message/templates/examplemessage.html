@@ -1,0 +1,24 @@
+{% extends 'admin/change_form.html' %}
+
+
+
+
+{% block after_field_sets %}
+<div>
+    <h2>Пример того как будет отправленно сообщение в мессенджер</h2>
+    <div>
+        <p><strong>{{ text }}</strong></p>
+        <ul type="square">
+        {% for button in buttons %}
+            <li><button>{{button.text}}</button><button>Посмотреть счет</button></li>
+        {% endfor %}
+
+        </ul>
+    </div>
+
+
+</div>
+
+
+
+{% endblock %}

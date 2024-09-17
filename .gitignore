@@ -1,0 +1,6 @@
+/message/migrations/
+/message/bot.session
+/bot.session
+/db.sqlite3
+/message/bot.session-journal
+/message/serveses_config.py
