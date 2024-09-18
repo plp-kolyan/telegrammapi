@@ -25,7 +25,7 @@ class Api(models.Model):
     url = models.CharField(max_length=250, verbose_name='Url', blank=True, null=True)
     headers = models.JSONField(verbose_name='headers', default=get_update_api_default, null=True, blank=True)
     method = models.CharField(max_length=250, verbose_name='Метод', choices=TYPES, blank=True, null=True)
-    body = models.TextField(verbose_name='Тело запроса', help_text="username - юзернаим пользователя в тг, message - сообщение", blank=True, null=True)
+    body = models.TextField(verbose_name='Тело запроса', help_text="user, payload, context", blank=True, null=True)
 
     response_json_test = models.JSONField(verbose_name='Пример тестового JSON ответа', default=get_update_api_default, null=True, blank=True)
 
