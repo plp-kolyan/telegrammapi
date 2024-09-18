@@ -1,5 +1,6 @@
 telegrammapi - это контсруктор телеграмм ботов главным образом заточенным на взаимодействие бота и стороннего api
 домонтстрацию можно посмотреть https://youtu.be/SXaFrHVehCs?si=aqTZa_JFobeVkBxd
+Видео с установкой и настройкой по этому мануалу тут https://youtu.be/VxQZo9DOUT8?si=4woGTdGEnSFj2OAd
 
 для работу нужен python и pycharm
 Установка python и pycharm https://www.youtube.com/watch?v=yBE4tw8uBic
