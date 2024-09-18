@@ -1,4 +1,4 @@
-
+product_video: 'https://www.youtube.com/watch?v=yBE4tw8uBic'
 Обновить пип в виндовс
 python.exe -m pip install --upgrade pip
 
