@@ -118,7 +118,10 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
 1) Протестируйте api запустите async def test_18(self):
 
     ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_10.jpg)
-    В случае успеха должно быть что-то подобное
+    В случае успеха должно быть что-то подобное этот шаг можно пропустить и вернуться к нему если не получается 
+    получить ответ в самом боте, при помощи этого теста можно получить больше информации в случае провала чем в
+    самом боте
+
 2) Далее идем answer - находится вот здесь http://127.0.0.1:8000/admin/message/answer/ добавляем новую запись
 
     Текст сообщения заполняем вот так {{response_json}}
@@ -149,6 +152,18 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
 
     ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_16.jpg)
 
+5) Теперь сделаем вывод более человекочитаемым
+    Текст сообщения заполняем вот так:
+    {% for usd in response_json.bpi.USD %}
+    {{usd}}: {{response_json.bpi.USD[usd]}}
+    {% endfor %}
+    Чтобы повторить /Bitcoin
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_16.jpg)
+
+    Ввводим в боте /Bitcoin и получаем
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_17.jpg)
 
 
 Для того чтобы настроить бот для работы с аpi протестируем api:
