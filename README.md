@@ -115,7 +115,7 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
 
 Самый простой пример для обращения бота по api показывает индекс цен на биткоин (BPI) в режиме реального времени.
 
-1) Протестируйте api запустите async def test_18(self):
+1) Протестируйте api запустите в файле tests.py async def test_18(self):
 
     ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_10.jpg)
     В случае успеха должно быть что-то подобное этот шаг можно пропустить и вернуться к нему если не получается 
@@ -171,10 +171,7 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
     headers = {'Authorization': 'Token ****************************************'}
     url = 'http://1**.***.**.***:8000/api/results_operator_on_tables'
     если аpi не требует авторизациии ставим headers = {}
-2) в файле tests.py находим async def test_17(self):
-
-    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_10.jpg)
-    
+2) в файле tests.py находим async def test_17(self):    
     в данном примере payload заполнен {"date_gte": "12.09.2024", "date_lte": "13.09.2024"}, указан method = 'get', 
     в этом случае payload передастся как параметры к запросу, если post то payload будет передан как json
     Естественно у вас headers, url, payload и method должны быть выбранны в соответствии с вашим api 
