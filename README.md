@@ -158,14 +158,14 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
     если аpi не требует авторизациии ставим headers = {}
 2) в файле tests.py находим async def test_17(self):
 
-    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_7.jpg)
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_10.jpg)
     
     в данном примере payload заполнен {"date_gte": "12.09.2024", "date_lte": "13.09.2024"}, указан method = 'get', 
     в этом случае payload передастся как параметры к запросу, если post то payload будет передан как json
     Естественно у вас headers, url, payload и method должны быть выбранны в соответствии с вашим api 
 3) Запускаем тест и видим результат
 
-    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_7.jpg)
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_11.jpg)
     Если всё делать правильно должно получиться так, вот тут на картинке вернулись данные с которыми можно будет 
     работать в боте
 
