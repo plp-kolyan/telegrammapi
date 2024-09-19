@@ -141,7 +141,7 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
 
     ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_14.jpg)
 
-    Скролим до /Bitcoin - это команда которая будет триггерить этот answer при ее вводе пользователем в боте
+    Скролим до Client messages добавим /Bitcoin - это команда которая будет триггерить этот answer при ее вводе пользователем в боте
     
     ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_12.jpg)
 
