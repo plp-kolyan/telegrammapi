@@ -100,7 +100,7 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_4.jpg)
 
-Далее в каталоге message в файле test.py нажимаем на test_2
+Далее в каталоге message в файле tests.py нажимаем на test_2
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_5.jpg)
 
@@ -108,5 +108,70 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
 после этого должен запустится бот и на каждый /start будет отвеченно сообщением из answer, тоесть этот привет который мы сейчас написали
 На этом первоначальная настройка бота завершена
 
-Для того чтобы сделать запрос к апи нужно прописать в serveses_config payload и headers в headers содержаться заголовки,
-в payload будет содержать если запрос get то params, если пост то json запроса
+Настройка бота
+
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_7.jpg)
+
+Самый простой пример для обращения бота по api показывает индекс цен на биткоин (BPI) в режиме реального времени.
+
+1) Протестируйте api запустите async def test_18(self):
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_10.jpg)
+    В случае успеха должно быть что-то подобное
+2) Далее идем answer - находится вот здесь http://127.0.0.1:8000/admin/message/answer/ добавляем новую запись
+
+    Текст сообщения заполняем вот так {{response_json}}
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_9.jpg)
+
+    Создаем ответ из api
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_13.jpg)
+
+    Название метода - придумываем любое, это просто название для себя чтобы было понятно что этот метод делает
+    Url: пишем https://api.coindesk.com/v1/bpi/currentprice.json
+    Метод: get, жмем сохранить
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_14.jpg)
+
+    Скролим до /Bitcoin - это команда которая будет триггерить этот answer при ее вводе пользователем в боте
+    
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_12.jpg)
+
+    Жмем сохранить
+
+3) Запускаем бот если он не запущен
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_5.jpg)
+
+4) Ввводим в боте /Bitcoin и получаем 
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_16.jpg)
+
+
+
+Для того чтобы настроить бот для работы с аpi протестируем api:
+1) прописать в serveses_config.py данные для вашего api, 
+    headers = {'Authorization': 'Token ****************************************'}
+    url = 'http://1**.***.**.***:8000/api/results_operator_on_tables'
+    если аpi не требует авторизациии ставим headers = {}
+2) в файле tests.py находим async def test_17(self):
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_7.jpg)
+    
+    в данном примере payload заполнен {"date_gte": "12.09.2024", "date_lte": "13.09.2024"}, указан method = 'get', 
+    в этом случае payload передастся как параметры к запросу, если post то payload будет передан как json
+    Естественно у вас headers, url, payload и method должны быть выбранны в соответствии с вашим api 
+3) Запускаем тест и видим результат
+
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_7.jpg)
+    Если всё делать правильно должно получиться так, вот тут на картинке вернулись данные с которыми можно будет 
+    работать в боте
+
+
+Прежде чем настроить api уже в самом боте необходимо собрать полезную нагрузку(payload) из диалога пользователя и бота
+полезную нагрузку можно собирать двумя способами:
+1) Получать данные из текстового ввода пользователя
+2) Получать данные из кнопок которые выбирает пользователь
+

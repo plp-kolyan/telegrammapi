@@ -371,9 +371,25 @@ class Test(IsolatedAsyncioTestCase):
 
 
     async def test_17(self):
+        '''
+        headers = {'Authorization': 'Token ****************************************'}
+        url = 'http://1**.***.**.***:8000/api/results_operator_on_tables'
+
+        headers, url определяем в serveses_config.py
+
+        '''
+
         payload = {"date_gte": "12.09.2024", "date_lte": "13.09.2024"}
         method = 'get'
         print(await get_response_json(url, payload, headers, method))
+
+    async def test_18(self):
+        headers = {}
+        payload = {}
+        url = 'https://api.coindesk.com/v1/bpi/currentprice.json'
+        method = 'get'
+        print(await get_response_json(url, payload, headers, method))
+
 
 
 

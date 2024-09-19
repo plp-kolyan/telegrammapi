@@ -419,7 +419,8 @@ def start_bot():
             answer = bot_mess.answer
             if answer.do_with_user_input:
                 message_template = Template(answer.do_with_user_input)
-                message_template.render(context=bot_mess.context.payload, message=event.message.message)
+                user = await get_user_info(bot, event.message.peer_id.user_id)
+                message_template.render(user=user, context=bot_mess.context.payload, message=event.message.message)
 
                 await bot_mess.context.asave(update_fields=["payload"])
                 if answer.answer_to_answer:

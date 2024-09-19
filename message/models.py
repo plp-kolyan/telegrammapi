@@ -43,7 +43,7 @@ class Answer(models.Model):
     template = models.TextField(verbose_name='Шаблон ответа',
                                 help_text="user, button_kwargs, response_json, payload, payload_internal, message, context",
                                 blank=True, default='')
-    do_with_user_input = models.TextField(verbose_name='Делать с пользовательским вводом', blank=True, default='', help_text='context, message')
+    do_with_user_input = models.TextField(verbose_name='Делать с пользовательским вводом', blank=True, default='', help_text='user, context, message')
     forward = models.TextField(verbose_name='Переслать', blank=True, default='', help_text="select_payload",)
     api = models.ForeignKey(Api, on_delete=models.SET_NULL, max_length=250, verbose_name='Ответ из апи', blank=True, null=True)
     context = models.CharField(verbose_name='Правило контекста', max_length=250, choices=CONTEXT_TYPES, default='parrent')
