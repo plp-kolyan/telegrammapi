@@ -159,7 +159,7 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
     {% endfor %}
     Чтобы повторить /Bitcoin
 
-    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_16.jpg)
+    ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_15.jpg)
 
     Ввводим в боте /Bitcoin и получаем
 
