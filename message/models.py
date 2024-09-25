@@ -55,10 +55,11 @@ class Answer(models.Model):
                                 verbose_name='Ответить в случае ввода',
                                 blank=True, null=True, default=None,
                                 related_name='answeranswer_to_answer')
-    # delete_button = models.BooleanField("Удалять кнопку-треггер", default=False)
+    delete_message = models.BooleanField('Удалять сообщение пользователя', default=True)
     delete_buttons = models.ManyToManyField('Answer',
                                               verbose_name='Удалять кнопки в контексте, ссылающиеся на',
                                               related_name='delete_button_in_context', blank=True)
+
 
 
     def __str__(self):

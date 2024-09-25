@@ -1,4 +1,6 @@
 import json
+import traceback
+
 from telethon.sync import TelegramClient, events, custom
 import re
 from telethon import functions, types
@@ -9,6 +11,9 @@ from django.db.models import Q
 from serveses_config import api_id, api_hash, bot_token, sender_id
 import aiohttp
 telegramm = {"ButtonInline": custom.Button.inline}
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 
 async def get_user_info(bot, user_id):
     user = await bot.get_entity(user_id)
@@ -29,7 +34,7 @@ async def get_response_json(url, payload, headers, method):
             async with getattr(session, method)(url, headers=headers, **{metods[method]: payload}) as resp:
                 response_json = await resp.json()
         except Exception:
-            response_json = {'error': 'Ошибка вызвавшая исключение'}
+            response_json = {'error': traceback.format_exc()}
 
     return response_json
 
@@ -168,7 +173,7 @@ async def create_botmess_dj(answer, user_id, parrent, button_django, bot):
         # if not payload:
         template = Template(answer.api.body)
         template.render(user=user, payload=payload, context=context.payload if context else {})
-        print(response_json)
+        print(payload)
         response_json = await get_response_json(answer.api.url, payload, answer.api.headers, answer.api.method)
 
 
@@ -409,7 +414,7 @@ def start_bot():
             # await bot.send_message(user.id, "Приветствуем вам в нашем боте",
             #                        buttons=[[custom.Button.text('/start')]])
 
-        @bot.on(events.NewMessage())
+        @bot.on(events.NewMessage(pattern=r'^[^/]'))
         async def user_input(event):
             # print(event.message.peer_id.user_id)
             # print(event.message)
@@ -427,8 +432,9 @@ def start_bot():
                     delete_messages.append(bot_mess.msg_id)
                     await event_reply(bot, answer.answer_to_answer, event.message.peer_id.user_id, bot_mess, None)
 
-            await bot.delete_messages(event.message.peer_id.user_id,
-                                      message_ids=delete_messages)
+            if answer.delete_message:
+                await bot.delete_messages(event.message.peer_id.user_id,
+                                          message_ids=delete_messages)
 
 
             # if event.message.reply_to:

@@ -8,7 +8,7 @@ import asyncio
 from unittest import IsolatedAsyncioTestCase
 import aiohttp
 from serveses_config import url, headers
-
+import re
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
@@ -213,7 +213,8 @@ class DevTestCase(TestCase):
             "descriptions": "Ваши крайние счета",
             "telegram_chat_id": "ID чата логистов"
         }
-
+    def test_16(self):
+        print(re.search(r'^[^/]', '/start'))
 
 class Test(IsolatedAsyncioTestCase):
     async def test_0(self):
@@ -390,6 +391,14 @@ class Test(IsolatedAsyncioTestCase):
         method = 'get'
         print(await get_response_json(url, payload, headers, method))
 
+    async def test_19(self):
+        headers = {}
+        payload = {"model": "gpt-4-turbo",
+            'messages':[{"role": "user", "content": "Привет! Как дела?"}]
+                   }
+        url = 'http://127.0.0.1:8000/api/ai_chat'
+        method = 'post'
+        print(await get_response_json(url, payload, headers, method))
 
 
 
