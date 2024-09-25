@@ -5,3 +5,4 @@ aiohttp==3.10.5
 aiodns==3.2.0
 djangorestframework==3.15.2
 g4f == 0.3.2.8
+curl_cffi == 0.7.2
