@@ -2,15 +2,10 @@ import json
 import traceback
 
 from telethon.sync import TelegramClient, events, custom
-import re
-from telethon import functions, types
-# from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from message.models import Api, Answer, Mess, BotMess, ButtonsRow, Button, ClientMessage, Context, TelegrammUser
 from jinja2 import Template
-from django.db.models import Q
 from serveses_config import api_id, api_hash, bot_token, sender_id
 import aiohttp
-telegramm = {"ButtonInline": custom.Button.inline}
 import asyncio
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
@@ -60,8 +55,6 @@ def get_answer(response_json, object_id):
 
     return answer
 
-# def get_message(response_json, get_response):
-#     pass
 
 async def update_messages_all_context(button_django, user_id, bot):
     if button_django:
@@ -76,7 +69,6 @@ async def event_reply(bot, answer, user_id, parrent, button_django):
         botmess = await create_botmess_dj(answer, user_id, parrent, button_django, bot)
 
         if button_django:
-            # print(f'answer == button_django.answer {answer == button_django.answer}')
             if not answer == parrent.answer:
                 bot_mess_qw = BotMess.objects.filter(context=button_django.buttonsrow.botmess.context).exclude(id=botmess.id)
                 await bot.delete_messages(user_id,
@@ -88,12 +80,8 @@ async def event_reply(bot, answer, user_id, parrent, button_django):
 
         await update_messages_all_context(button_django, user_id, bot)
         kwargs = await get_message_kwargs(botmess_id=botmess.id)
-        # print(botmess.text, kwargs)
-        # message = await event.reply(botmess.text, **kwargs)
         message = await bot.send_message(user_id, botmess.text, **kwargs)
-        # print(f'botmess.msg_id {botmess.msg_id}')
         botmess.msg_id = message.id
-        # print(f'botmess.msg_id {botmess.msg_id}')
         await botmess.asave(update_fields=["msg_id"])
         if answer.forward != '':
             select_payload = await button_django.buttonsrow.botmess.context.get_select_payload()
@@ -101,21 +89,6 @@ async def event_reply(bot, answer, user_id, parrent, button_django):
 
             await bot.send_message(sender_id, template.render(select_payload=select_payload), parse_mode='HTML')
 
-
-# def save_send(api_obj, loop, sender_id=sender_id):
-#     bot = TelegramClient('bot', api_id, api_hash, loop=loop).start(bot_token=bot_token)
-#     with (bot):
-#
-#         buttons = []
-#         response_json = json.loads(api_obj.example)
-#
-#         try:
-#             template = Template(api_obj.sucsess)
-#         except Exception:
-#             bot.send_message(sender_id, 'Ошибка в шаблоне')
-#         else:
-#             template.render(response_json=response_json, buttons=buttons, button=custom.Button)
-#             bot.send_message(sender_id, 'Сообщение из админки', buttons=buttons)
 
 
 
@@ -170,10 +143,8 @@ async def create_botmess_dj(answer, user_id, parrent, button_django, bot):
             context = await Context.objects.acreate()
     if answer.api:
         """выполняем запрос"""
-        # if not payload:
         template = Template(answer.api.body)
         template.render(user=user, payload=payload, context=context.payload if context else {})
-        print(payload)
         response_json = await get_response_json(answer.api.url, payload, answer.api.headers, answer.api.method)
 
 
@@ -201,11 +172,9 @@ async def create_botmess_dj(answer, user_id, parrent, button_django, bot):
         message["text"] = answer.text
     botmess = await BotMess.objects.acreate(user_id=user_id,
                                             parrent=parrent, text=message_text, context=context, answer=answer)
-    # print(message)
-    # if button_kwargs:
+
     for button_kwargs_row in buttons_list:
         buttonsrow = await ButtonsRow.objects.acreate(botmess=botmess)
-        # await ButtonsRow.objects.acreate(botmess=)
 
         for button_kwargs in button_kwargs_row:
             await Button.objects.acreate(buttonsrow=buttonsrow, **button_kwargs)
@@ -218,153 +187,8 @@ def start_bot():
 
     bot = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
     with ((bot)):
-
-        # @bot.on(events.NewMessage)
-        # async def handler(event):
-        #
-        #     value = event.message.message
-        #     sender_id = event.message.peer_id.user_id
-        #     await bot.send_message(sender_id,
-        #                            'Новая новость из канала: ... [ID: ...]\n\nТут новость будет.\n\nДля того, чтобы опубликовать эту новость, нажмите на соответствующую кнопку.',
-        #                            buttons=[[custom.Button.inline("Back", data="osg")]])
-        #     await bot.send_message(sender_id, "Нажмите на кнопку 'Back'",
-        #                            buttons=[[custom.Button.inline("Back", data="osg")]])
-        #     username = await bot.get_entity(sender_id)
-        #     print(event)
-        #     await bot.send_message(username, value)
-        @bot.on(events.NewMessage(pattern='/start_example'))
-        async def start_handler(event):
-            api_obj = await Api.objects.aget(id=1)
-            answer = get_answer(api_obj.example, api_obj)
-            buttons = [
-                [custom.Button.inline(button['text'], data=button['bytes']), custom.Button.url('Посмотреть счет', 'https://www.google.com/')] for button in answer['buttons']
-            ] + [[custom.Button.inline('В начало', data='/start'), custom.Button.inline('Связаться с менеджером', data='/manager')]] + \
-                      [[custom.Button.inline('<--', data='/start'), custom.Button.inline('-->', data='/manager')]] + \
-                      [[custom.Button.inline('Выбрать по дате', data='/start'), custom.Button.inline('Выбрать по номеру счёта', data='/manager')]] + \
-                      [[custom.Button.switch_inline('Передать бота', 'Телеграмм бот компанни ООО')]] +\
-                [[custom.Button.url('пример ссылки', 'http://178.248.87.207/admin/')]]
-
-            sender_id = event.message.peer_id.user_id
-            await bot.send_message(sender_id,
-                                       answer['text'],
-                                       buttons=buttons)
-            await bot.send_message(sender_id, answer['text'],
-                                   buttons=[[custom.Button.text('Пример кнопки')]])
-
-
-        # https://docs.telethon.dev/en/stable/modules/events.html#telethon.events.callbackquery.CallbackQuery
-        # @bot.on(events.CallbackQuery)
-        # async def callback_query_handler(event):
-        #     print(event)
-        #     # sender_id = event.message.peer_id.user_id
-        #     callback_query = event.data
-        #     # username = await bot.get_entity(sender_id)
-        #     str_callback_query = callback_query.decode('utf-8')
-        #     if str_callback_query.isdigit():
-        #         answer = await Answer.objects.select_related("api").aget(id=int(str_callback_query))
-        #         if answer.api:
-        #             buttons = []
-        #             response_json = json.loads(answer.api.example)
-        #             template = Template(answer.api.sucsess)
-        #             template.render(response_json=response_json, buttons=buttons, button=custom.Button)
-        #             await event.reply(answer.clien_qw, buttons=buttons)
-        #             await event.answer('Correct answer!')
-        #         else:
-        #             await event.reply(answer.clien_qw)
-        #     else:
-        #         print(callback_query)
-        #         await event.reply(f'Отправленно Оератору - {callback_query.decode("utf-8")}', buttons=Button.clear())
-        #         await event.reply( 'Для продолжения выбирите ещё счет',
-        #                                buttons=[[custom.Button.text('Завершить диалог')]])
-            # await Mess.objects.acreate(username=username, user_id=)
-
-        # @bot.on(events.CallbackQuery)
-        # async def create_mess(event):
-        #     print(event)
-        #     callback_query = event.data
-        #     str_callback_query = callback_query.decode('utf-8')
-        #     print(event.chat_id)
-        #     user = await bot.get_entity(sender_id)
-        #     print(user.username)
-        #     await Mess.objects.acreate(username=user.username, user_id=event.chat_id, text=str_callback_query)
-
-        # @bot.on(events.NewMessage(pattern='Завершить диалог'))
-        # async def start_handler(event):
-        #     await event.reply(f'Диалог завершен, до свидания', buttons=Button.clear())
-
-        @bot.on(events.NewMessage(pattern='/jinjaexample'))
-        async def start_jinjaexample(event):
-            response_json = {"orders": [{"number": 2133, "date": "12.08.2024"}, {"number": 2143, "date": "12.08.2024"},
-                                        {"number": 2143, "date": "12.08.2024"}, {"number": 2143, "date": "12.08.2024"},
-                                        {"number": 2143, "date": "12.08.2024"}, {"number": 2143, "date": "12.08.2024"},
-                                        {"number": 2143, "date": "12.08.2024"}],
-                             "descriptions": "Скорректировать заявку или задать вопрос по ней"}
-
-            buttons = []
-            template = Template('''
-            {% for order in response_json.orders %}
-                {% with %}
-                    {% set text = "N:{number}, от: {date}".format(number = order.number, date = order.date) %}
-                    {% set _ = buttons.append([button.inline(text=text, data=order.number), 
-                    button.url('Посмотреть счет', 'https://www.google.com/')]) %}                    
-                {% endwith %}
-                
-                    
-            {% endfor %}
-                    ''')
-            template.render(response_json=response_json, buttons=buttons, button=custom.Button)
-
-            await event.reply('Пример джинжа', buttons=buttons)
-
-        @bot.on(events.NewMessage(pattern='/jinjadjango'))
-        async def start_jinjadjango(event):
-            buttons = []
-            api_obj = await Api.objects.aget(id=1)
-            response_json = json.loads(api_obj.example)
-            template = Template(api_obj.sucsess)
-            template.render(response_json=response_json, buttons=buttons, button=custom.Button)
-            await event.reply('k', buttons=buttons)
-
-        @bot.on(events.NewMessage(pattern='/sender_id'))
-        async def get_sender_id(event):
-            sender_id = event.message.peer_id.user_id
-            await event.reply(str(sender_id))
-
-        # @bot.on(events.NewMessage(pattern='/start'))
-        # async def start_handler(event):
-        #     start_message_qw = Answer.objects.filter(answer=None).values('id', 'clien_qw')
-        #     buttons = [[custom.Button.inline(mess_obj['clien_qw'], data=mess_obj['id'])] async for mess_obj in start_message_qw]
-        #     reply = await event.reply("Начало", buttons=buttons)
-        #     print(reply)
-
-        # @bot.on(events.NewMessage(pattern='/start'))
-        async def start_handler(event):
-            botmess = await BotMess.objects.acreate(user_id=event.message.peer_id.user_id)
-            answers = Answer.objects.select_related('api').filter(answer=None)
-            buttons = []
-            async for answer in answers:
-                buttonsrow = await ButtonsRow.objects.acreate(botmess=botmess)
-                kwargs = {"buttonsrow": buttonsrow,
-                          "type_b": 'i',
-                          "arg_1": answer.clien_qw,
-                          "answer_id": answer.id
-                          }
-                if answer.api:
-                    payload = {}
-                    template = Template(answer.api.body)
-                    template.render(user_id=event.message.peer_id.user_id, payload=payload)
-                    kwargs.update({"payload": payload})
-                await Button.objects.acreate(**kwargs)
-
-            message = await event.reply("Начало", buttons=await get_telegramm_buttons(botmess.id))
-            botmess.msg_id = message.id
-            await botmess.asave(update_fields=["msg_id"])
-
         @bot.on(events.CallbackQuery)
         async def callback_query_handler(event):
-            # print(event.chat_id)
-            # print(event.message_id)
-
             callback_query = event.data
             str_callback_query = callback_query.decode('utf-8')
             button_django = await Button.objects.select_related("answer__api").select_related(
@@ -411,13 +235,9 @@ def start_bot():
             user_id = event.message.peer_id.user_id
             kwargs = await get_user_info(bot, user_id)
             await TelegrammUser.objects.aget_or_create(user_id=user_id, **kwargs)
-            # await bot.send_message(user.id, "Приветствуем вам в нашем боте",
-            #                        buttons=[[custom.Button.text('/start')]])
 
         @bot.on(events.NewMessage(pattern=r'^[^/]'))
         async def user_input(event):
-            # print(event.message.peer_id.user_id)
-            # print(event.message)
             delete_messages = [event.message.id]
             bot_mess = await BotMess.objects.select_related('answer__answer_to_answer__api', "answer__api", 'context'
                                                                  ).filter(user_id=event.message.peer_id.user_id).alast()
@@ -435,18 +255,6 @@ def start_bot():
             if answer.delete_message:
                 await bot.delete_messages(event.message.peer_id.user_id,
                                           message_ids=delete_messages)
-
-
-            # if event.message.reply_to:
-            #     pass
-
-
-
-
-
-
-
-
 
 
         bot.run_until_disconnected()
