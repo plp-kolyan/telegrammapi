@@ -249,15 +249,22 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 вот здесь https://github.com/plp-kolyan/whatisjson/tree/master
 
 <h2>Отрисовка кнопок</h2>
+
 Добавьте новый Анswer http://127.0.0.1:8000/admin/message/answer/add/
+
 Текст сообщения: Пример кнопки /buttons
+
 Шаблон ответа: {% set _ = button_kwargs.append([{
                         "type_b": "i",
                         "arg_1": "Самая простая кнопка",                       
                     }]) %}
+
 Проскрольте до Client messages и добавьте /buttons
+
 нажмите сохранить
+
 напишите боту /buttons
+
 получите такой ответ:
 
 
