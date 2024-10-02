@@ -243,6 +243,28 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 в случае какого то пользовательского триггера это может быть нажатие пользователем на кнопку либо ввод текствого сообщение
 Текст сообщения - это сообщение пользователю
 
+
+<h2>JSON подобные обьекты в полях Answer</h2>
+К ним относятся context, response_json, payload, payload_internal подробнее о json я обьясняю 
+вот здесь https://github.com/plp-kolyan/whatisjson/tree/master
+
+<h2>Отрисовка кнопок</h2>
+Добавьте новый Анswer http://127.0.0.1:8000/admin/message/answer/add/
+Текст сообщения: Пример кнопки /buttons
+Шаблон ответа: {% set _ = button_kwargs.append([{
+                        "type_b": "i",
+                        "arg_1": "Самая простая кнопка",                       
+                    }]) %}
+Проскрольте до Client messages и добавьте /buttons
+нажмите сохранить
+напишите боту /buttons
+получите такой ответ:
+
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_20.jpg)
+
+
+
 <h1>Переменный в шаблонах Answer</h1>
 user(first_name, last_name, username, phone) - это данные пользователя из телеграмм акаунта 
 для добавления их к ответу можно использовать такой синтаксис: 

@@ -216,6 +216,13 @@ class DevTestCase(TestCase):
     def test_16(self):
         print(re.search(r'^[^/]', '/start'))
 
+
+    def test_17(self):
+        response_json = {"key": "value"}
+        print(response_json['key'])
+
+
+
 class Test(IsolatedAsyncioTestCase):
     async def test_0(self):
         callback_query= b'2'
