@@ -254,7 +254,9 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 Текст сообщения: Пример кнопки /buttons
 
-Шаблон ответа: {% set _ = button_kwargs.append([{
+Шаблон ответа: 
+
+{% set _ = button_kwargs.append([{
                         "type_b": "i",
                         "arg_1": "Самая простая кнопка",                       
                     }]) %}
@@ -274,7 +276,9 @@ button_kwargs - это список c кнопками такой структу
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_21.jpg)
 
-нужно включить кнопку вот так: {% set _ = button_kwargs.append([{
+нужно включить кнопку вот так: 
+
+{% set _ = button_kwargs.append([{
                                     "type_b": "i",
                                     "arg_1": "Самая простая кнопка",                       
                                 },
@@ -283,6 +287,7 @@ button_kwargs - это список c кнопками такой структу
                                     "arg_1": "Самая простая кнопка",                       
                                 }
 ]) %}
+
 отредактируйте Шаблон ответа чтобы в этом убедиться и снова напишите боту /buttons
 
 
