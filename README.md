@@ -270,6 +270,21 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_20.jpg)
 
+button_kwargs - это список c кнопками такой структуры [[], []] для того чтобы каждая кнопка была добавленна в один ряд 
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_21.jpg)
+
+нужно включить кнопку вот так: {% set _ = button_kwargs.append([{
+                                    "type_b": "i",
+                                    "arg_1": "Самая простая кнопка",                       
+                                },
+                                {
+                                    "type_b": "i",
+                                    "arg_1": "Самая простая кнопка",                       
+                                }
+]) %}
+отредактируйте Шаблон ответа чтобы в этом убедиться и снова напишите боту /buttons
+
 
 
 <h1>Переменный в шаблонах Answer</h1>
