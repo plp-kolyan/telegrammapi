@@ -315,7 +315,7 @@ button_kwargs - это список c кнопками такой структу
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_23.jpg)
 
-отредактируйте Шаблон ответа 
+Шаблон ответа для примера
 
 `{% set _ = button_kwargs.append([{
                                     "type_b": "i",
@@ -324,7 +324,44 @@ button_kwargs - это список c кнопками такой структу
                                 }
 ]) %}`
 
+"select": False - означает что по умолчанию эта кнопка не выбранна, True - будет выбранна сразу
 
+Данный пример не содержит ни какой полезной нагрузки, полезную нагрузку за кнопкой можно посмотреть 
+тут http://127.0.0.1:8000/admin/message/button/ в данном случае будет выглядеть так
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_24.jpg)
+
+для того чтобы добавить полезную нагрузку нужно отредактировать шаблон вот так
+
+`{% set _ = button_kwargs.append([{
+                                    "type_b": "i",
+                                    "arg_1": "Самая простая кнопка", 
+                                   "select": False,
+                                   "payload_internal": {'selects':{'key': 1}},
+                                }
+]) %}
+{% set _ = button_kwargs.append([{
+                                    "type_b": "i",
+                                    "arg_1": "Добавить в контекст", 
+                                    "collect_in_context": "selects",                                    
+                                }
+]) %}`
+
+Тоесть нужно добавить "payload_internal": {'selects':{'key': 1}}, структура должна быть именно как в примере ключи и значения могут быть любые
+
+Если в пользователь нажмет на "Добавить в контекст" с галочкой на "Самая простая кнопка"
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_25.jpg)
+
+
+
+
+Тогда выбор будкт добавленн в контекст таким образом, его можно будет посмотреть тут http://127.0.0.1:8000/admin/message/button/
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_26.jpg)
+
+Если же убрать галочку с "Самая простая кнопка" и нажать "Добавить в контекст" то selects в контексте 
+пересоберется по новой и будет пуст, так как нет выбранных элементов, визуально это выглядит как удаление раннее выбраного selects
 
 <h1>Переменный в шаблонах Answer</h1>
 user(first_name, last_name, username, phone) - это данные пользователя из телеграмм акаунта 
