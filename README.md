@@ -278,7 +278,7 @@ button_kwargs - это список c кнопками такой структу
 
 нужно включить кнопку вот так: 
 
-{% set _ = button_kwargs.append([{
+`{% set _ = button_kwargs.append([{
                                     "type_b": "i",
                                     "arg_1": "Самая простая кнопка",                       
                                 },
@@ -286,7 +286,7 @@ button_kwargs - это список c кнопками такой структу
                                     "type_b": "i",
                                     "arg_1": "Самая простая кнопка",                       
                                 }
-]) %}
+]) %}`
 
 отредактируйте Шаблон ответа чтобы в этом убедиться и снова напишите боту /buttons
 
@@ -300,7 +300,7 @@ button_kwargs - это список c кнопками такой структу
 
 отредактируйте Шаблон ответа 
 
-{% set _ = button_kwargs.append([{
+`{% set _ = button_kwargs.append([{
                                     "type_b": "i",
                                     "arg_1": "Самая простая кнопка",                       
                                 }
@@ -309,7 +309,22 @@ button_kwargs - это список c кнопками такой структу
                                     "type_b": "i",
                                     "arg_1": "Самая простая кнопка",                       
                                 }
-]) %}
+]) %}`
+
+Добавить выбор к кнопке при нажатии
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_23.jpg)
+
+отредактируйте Шаблон ответа 
+
+`{% set _ = button_kwargs.append([{
+                                    "type_b": "i",
+                                    "arg_1": "Самая простая кнопка", 
+                                   "select": False,
+                                }
+]) %}`
+
+
 
 <h1>Переменный в шаблонах Answer</h1>
 user(first_name, last_name, username, phone) - это данные пользователя из телеграмм акаунта 
