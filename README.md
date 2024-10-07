@@ -298,19 +298,16 @@ button_kwargs - это список c кнопками такой структу
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_21.jpg)
 
-нужно включить кнопку вот так: 
+Нужно отредактировать шаблон ответа вот так: 
 
-`{% set _ = button_kwargs.append([{
-                                    "type_b": "i",
-                                    "arg_1": "Самая простая кнопка",                       
-                                },
-                                {
-                                    "type_b": "i",
-                                    "arg_1": "Самая простая кнопка",                       
-                                }
-]) %}`
+    {% set list = [] %}
+    {% for number in [1, 2] %}
+        {% set _ = list.append({"type_b": "i", "arg_1": "Кнопка {number}".format(number=number)}) %}
+    {% endfor %}    
+    {% set _ = button_kwargs.append(list) %}`
 
-отредактируйте Шаблон ответа чтобы в этом убедиться и снова напишите боту /buttons
+
+чтобы проверить напишите боту /buttons - команда которую вы указывали в Client messages
 
 Может показаться что кнопки абсолютно одинавы но на самом деле это две обсалютно разные кнопки которые могут нести
 разную полезную нагрузку и django четко понимает по какой из кнопок было нажатие, в jango кнопки можно увидеть в http://127.0.0.1:8000/admin/message/button/
@@ -322,16 +319,14 @@ button_kwargs - это список c кнопками такой структу
 
 отредактируйте Шаблон ответа 
 
-`{% set _ = button_kwargs.append([{
+
+`{% for number in [1, 2] %}
+        {% set _ = button_kwargs.append([{
                                     "type_b": "i",
-                                    "arg_1": "Самая простая кнопка",                       
+                                    "arg_1": "Кнопка {number}".format(number=number),                       
                                 }
-]) %}
-{% set _ = button_kwargs.append([{
-                                    "type_b": "i",
-                                    "arg_1": "Самая простая кнопка",                       
-                                }
-]) %}`
+        ]) %}
+    {% endfor %}`
 
 Добавить выбор к кнопке при нажатии
 
