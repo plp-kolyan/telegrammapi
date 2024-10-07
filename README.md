@@ -507,7 +507,7 @@ collect_in_context указывает какой ключ из выбранны�
 
 Результат работы будет выглядеть так:
 
-![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_35.jpg)
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_34.jpg)
 
 <h1>Переменный в шаблонах Answer</h1>
 user(first_name, last_name, username, phone) - это данные пользователя из телеграмм акаунта 
