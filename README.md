@@ -410,7 +410,7 @@ collect_in_context указывает какой ключ из выбранны�
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_30.jpg)
 
 Данный пример позволяет выполнить множественный выбор, но часто бывает так что нам нужно ограничить выбор каким то одним 
-вариантов, для этого просто добавьте ключ "unique_select_in_context": True, 
+вариантов, для этого просто добавьте ключ "unique_select_in_context": True, "payload_internal": {'select': number} и "collect_in_context": "select",
 
 Пропишите в шаблон ответа вот так:
 
@@ -421,16 +421,24 @@ collect_in_context указывает какой ключ из выбранны�
             "arg_1": "Кнопка {number}".format(number=number), 
             "select": False,
             "unique_select_in_context": True,
-            "payload_internal": {'selects':{'key': number}},
+            "payload_internal": {'select': number},
         }]) %}        
     {% endfor %}
     {% set _ = button_kwargs.append([{
         "type_b": "i",
         "arg_1": "Добавить в контекст", 
-        "collect_in_context": "selects",                                    
+        "collect_in_context": "select",                                    
         }]) %}
 
-![Теперь если выбрать одну из кнопок то с другой галочка снимается](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_31.jpg)
+Теперь если выбрать другую кнопку при действующем выборе, то галочка на действующем выборе исчезнет
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_31.jpg)
+
+Нажатие на кнопку "Добавить в контекст" приведет к заполнению контекста в таком виде http://127.0.0.1:8000/admin/message/botmess/:
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_32.jpg)
+
+
 
 <h1>Переменный в шаблонах Answer</h1>
 user(first_name, last_name, username, phone) - это данные пользователя из телеграмм акаунта 
