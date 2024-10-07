@@ -318,12 +318,12 @@ button_kwargs - это список c кнопками такой структу
 
 
     {% for number in [1, 2] %}
-            {% set _ = button_kwargs.append([{
-                                        "type_b": "i",
-                                        "arg_1": "Кнопка {number}".format(number=number),                       
-                                    }
-            ]) %}
-        {% endfor %}
+        {% set _ = button_kwargs.append([{
+                                    "type_b": "i",
+                                    "arg_1": "Кнопка {number}".format(number=number),                       
+                                }
+        ]) %}
+    {% endfor %}
 
 Добавить выбор к кнопке при нажатии
 
@@ -331,12 +331,12 @@ button_kwargs - это список c кнопками такой структу
 
 Шаблон ответа для примера
 
-`{% set _ = button_kwargs.append([{
-                                    "type_b": "i",
-                                    "arg_1": "Самая простая кнопка", 
-                                   "select": False,
-                                }
-]) %}`
+    {% set _ = button_kwargs.append([{
+                                        "type_b": "i",
+                                        "arg_1": "Самая простая кнопка", 
+                                       "select": False,
+                                    }
+    ]) %}
 
 "select": False - означает что по умолчанию эта кнопка не выбранна, True - будет выбранна сразу
 
@@ -345,23 +345,25 @@ button_kwargs - это список c кнопками такой структу
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_24.jpg)
 
-для того чтобы добавить полезную нагрузку нужно отредактировать шаблон вот так
-
-`{% set _ = button_kwargs.append([{
-                                    "type_b": "i",
-                                    "arg_1": "Самая простая кнопка", 
-                                   "select": False,
-                                   "payload_internal": {'selects':{'key': 1}},
-                                }
-]) %}
-{% set _ = button_kwargs.append([{
-                                    "type_b": "i",
-                                    "arg_1": "Добавить в контекст", 
-                                    "collect_in_context": "selects",                                    
-                                }
-]) %}`
-
-Тоесть нужно добавить "payload_internal": {'selects':{'key': 1}}, структура должна быть именно как в примере ключи и значения могут быть любые
+Для того чтобы добавить полезную нагрузку прописать в шаблон ответа шаблон вот так
+    
+    {% set buttons =  [{
+        "type_b": "i",
+        "arg_1": "Самая простая кнопка", 
+       "select": False,
+       "payload_internal": {'selects':{'key': 1}},
+    },
+    {
+        "type_b": "i",
+        "arg_1": "Добавить в контекст", 
+        "collect_in_context": "selects",                                    
+    }] %}
+    {% for button in buttons %}
+        {% set _ = button_kwargs.append([button]) %}
+    {% endfor %}
+    
+Тоесть нужно добавить "payload_internal": {'selects':{'key': 1}}, структура должна быть именно как в примере ключи и значения могут быть любые,
+collect_in_context указывает какой ключ из выбранных элементов нужно добавлять в контекст
 
 Если в пользователь нажмет на "Добавить в контекст" с галочкой на "Самая простая кнопка"
 
