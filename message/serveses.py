@@ -195,7 +195,7 @@ def start_bot():
                 "buttonsrow__botmess__context").select_related(
                 "buttonsrow__botmess__answer").aget(id=int(str_callback_query))
             context = button_django.buttonsrow.botmess.context
-            if button_django.collect_in_context:
+            if button_django.collect_in_context and not button_django.unique_select_in_context:
                 context.payload.update({button_django.collect_in_context:[payload_internal[button_django.collect_in_context] async for payload_internal in (Button.objects.filter(buttonsrow__botmess__context=context, select=True)
                 .filter(**{f'payload_internal__has_key': button_django.collect_in_context}).values_list('payload_internal', flat=True))]})
                 await context.asave(update_fields=["payload"])
