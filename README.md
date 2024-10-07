@@ -256,10 +256,10 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 Шаблон ответа: 
 
-`{% set _ = button_kwargs.append([{
-                        "type_b": "i",
-                        "arg_1": "Самая простая кнопка",                       
-                    }]) %}`
+    {% set _ = button_kwargs.append([{
+                            "type_b": "i",
+                            "arg_1": "Самая простая кнопка",                       
+                        }]) %}
 
 
 
@@ -283,11 +283,11 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 Вернемся в Аnswer с кнопками и поменяем 
 Шаблон ответа: 
 
-`{% set _ = button_kwargs.append([{
-                        "type_b": "i",
-                        "arg_1": "Самая простая кнопка",
-                        "answer_id": 14
-                    }]) %}`
+    {% set _ = button_kwargs.append([{
+                            "type_b": "i",
+                            "arg_1": "Самая простая кнопка",
+                            "answer_id": 14
+                        }]) %}
 
 В шаблон ответа добавим "answer_id": 14, где 14 номер id записи которую вы создали
 Жмем сохранить, пишем боту /buttons получаем сообщение с кнопкой, нажимаем кнопку и получаем такой результат
@@ -298,7 +298,7 @@ button_kwargs - это список c кнопками такой структу
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_21.jpg)
 
-Нужно отредактировать шаблон ответа вот так: 
+Нужно прописать в шаблон ответа вот так: 
 
     {% set list = [] %}
     {% for number in [1, 2] %}
@@ -309,24 +309,21 @@ button_kwargs - это список c кнопками такой структу
 
 чтобы проверить напишите боту /buttons - команда которую вы указывали в Client messages
 
-Может показаться что кнопки абсолютно одинавы но на самом деле это две обсалютно разные кнопки которые могут нести
-разную полезную нагрузку и django четко понимает по какой из кнопок было нажатие, в jango кнопки можно увидеть в http://127.0.0.1:8000/admin/message/button/
-
 
 для того чтобы каждая кнопка была добавленна в новый ряд
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_22.jpg)
 
-отредактируйте Шаблон ответа 
+Пропишите Шаблон ответа 
 
 
-`{% for number in [1, 2] %}
-        {% set _ = button_kwargs.append([{
-                                    "type_b": "i",
-                                    "arg_1": "Кнопка {number}".format(number=number),                       
-                                }
-        ]) %}
-    {% endfor %}`
+    {% for number in [1, 2] %}
+            {% set _ = button_kwargs.append([{
+                                        "type_b": "i",
+                                        "arg_1": "Кнопка {number}".format(number=number),                       
+                                    }
+            ]) %}
+        {% endfor %}
 
 Добавить выбор к кнопке при нажатии
 
