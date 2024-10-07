@@ -296,7 +296,8 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_28.jpg)
 
-button_kwargs - это список c кнопками такой структуры [[], []] для того чтобы каждая кнопка была добавленна в один ряд 
+button_kwargs - это список c кнопками такой структуры [[], []] для того чтобы каждая кнопка была добавленна в один ряд
+где каждый вложенный список это новый ряд кнопок
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_21.jpg)
 
