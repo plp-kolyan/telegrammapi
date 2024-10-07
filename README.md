@@ -250,16 +250,18 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 <h2>Отрисовка кнопок</h2>
 
-Добавьте новый Анswer http://127.0.0.1:8000/admin/message/answer/add/
+Добавьте новый Аnswer http://127.0.0.1:8000/admin/message/answer/add/
 
 Текст сообщения: Пример кнопки /buttons
 
 Шаблон ответа: 
 
-{% set _ = button_kwargs.append([{
+`{% set _ = button_kwargs.append([{
                         "type_b": "i",
                         "arg_1": "Самая простая кнопка",                       
-                    }]) %}
+                    }]) %}`
+
+
 
 Проскрольте до Client messages и добавьте /buttons
 
@@ -269,8 +271,28 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 получите такой ответ:
 
-
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_20.jpg)
+
+В данном примере нажатие на эту кнопку ни к чему не приведет, давайте сделаем так, чтобы по нажатию генерировалось 
+новое сообщение из Answer который мы укажем, для этого создадим новый answer http://127.0.0.1:8000/admin/message/answer/add/
+    Текст сообщения: Результат нажатия кнопки
+нажимаем сохранить именно сохранить чтобы перекинуло на страницу со всеми записями, запоминаем ID нового ответа
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_27.jpg)
+
+Вернемся в Аnswer с кнопками и поменяем 
+Шаблон ответа: 
+
+`{% set _ = button_kwargs.append([{
+                        "type_b": "i",
+                        "arg_1": "Самая простая кнопка",
+                        "answer_id": 14
+                    }]) %}`
+
+В шаблон ответа добавим "answer_id": 14, где 14 номер id записи которую вы создали
+Жмем сохранить, пишем боту /buttons получаем сообщение с кнопкой, нажимаем кнопку и получаем такой результат
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_28.jpg)
 
 button_kwargs - это список c кнопками такой структуры [[], []] для того чтобы каждая кнопка была добавленна в один ряд 
 

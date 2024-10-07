@@ -15,5 +15,6 @@ def ai_chat(request):
             model=request.data['model'],
             messages=request.data['messages'],
 
+
         )
         return Response({"content": response.choices[0].message.content})
