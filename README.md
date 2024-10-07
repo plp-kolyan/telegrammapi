@@ -391,8 +391,8 @@ collect_in_context указывает какой ключ из выбранны�
         {% set _ = button_kwargs.append([{
             "type_b": "i",
             "arg_1": "Кнопка {number}".format(number=number), 
-           "select": False,
-           "payload_internal": {'selects':{'key': number}},
+            "select": False,
+            "payload_internal": {'selects':{'key': number}},
         }]) %}        
     {% endfor %}
     {% set _ = button_kwargs.append([{
@@ -408,6 +408,29 @@ collect_in_context указывает какой ключ из выбранны�
 При нажатии на кнопку добавить в контекст, контекст будет заполнен всеми выбранными элементами
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_30.jpg)
+
+Данный пример позволяет выполнить множественный выбор, но часто бывает так что нам нужно ограничить выбор каким то одним 
+вариантов, для этого просто добавьте ключ "unique_select_in_context": True, 
+
+Пропишите в шаблон ответа вот так:
+
+
+    {% for number in [1, 2, 3] %}
+        {% set _ = button_kwargs.append([{
+            "type_b": "i",
+            "arg_1": "Кнопка {number}".format(number=number), 
+            "select": False,
+            "unique_select_in_context": True,
+            "payload_internal": {'selects':{'key': number}},
+        }]) %}        
+    {% endfor %}
+    {% set _ = button_kwargs.append([{
+        "type_b": "i",
+        "arg_1": "Добавить в контекст", 
+        "collect_in_context": "selects",                                    
+        }]) %}
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_31.jpg)
 
 <h1>Переменный в шаблонах Answer</h1>
 user(first_name, last_name, username, phone) - это данные пользователя из телеграмм акаунта 
