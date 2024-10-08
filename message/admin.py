@@ -102,7 +102,7 @@ class TelegrammUserAdmin(admin.ModelAdmin):
 
 @admin.register(Context)
 class ContextAdmin(admin.ModelAdmin):
-    list_display = ['id', 'get_select_payload']
+    list_display = ['id', 'payload']
 
     def get_select_payload(self, obj):
         return async_to_sync(obj.get_select_payload)()

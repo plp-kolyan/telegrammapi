@@ -221,6 +221,10 @@ class DevTestCase(TestCase):
         response_json = {"key": "value"}
         print(response_json['key'])
 
+    def test_18(self):
+        payload_internal =  {'select': "number"}
+        print(list(payload_internal.keys())[0])
+
 
 
 class Test(IsolatedAsyncioTestCase):
