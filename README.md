@@ -464,64 +464,33 @@ button_kwargs - это список c кнопками такой структу
 то кнопка будет отрисованна,
 аналогично свойство show_button_if будет работать и с кнопками с множественным выбором
 
+"delete_in_context" - Указывает ключ который нужно удалить из контекста, если его не указать то вы результате 
+нажатия на кнопку "Назад" изменит сообщение на предыдущее, подчистив старый выбор, но оставит выбор в контексте,
+для того чтобы очистить контекст от select нужно это явно указать
 
-На данный момент кнопка "Добавить в контекст" просто добавляет данные в контекст которые нигде не используются
-Измените ранее созданный answer "Результат нажатия кнопки" или создайте его таким образом:
+"answer_id" это id answer в который вам нужно перейти по нажатию этой кнопки например:
 
-Текст сообщения: 
+"Назад" - "answer_id": 11, "Продолжить" - "answer_id": 14
 
-    Вы выбрали кнопку:
-        №{{ context.select }}
+## Пагинация для только одного выбора:
+Отредактируйте answer, где Текст сообщения: "Пример кнопки /buttons"
+
+Текст сообщения:
+    
     Пример кнопки /buttons
+    Пагинация c {{context.pagination.start}} до {{context.pagination.end  }}
+    
 
 Шаблон ответа:
 
-    {% set _ = button_kwargs.append([{
-            "type_b": "i",
-            "arg_1": "Назад", 
-            "delete_in_context": ["select"],
-            "answer_id": 11
-        }]) %}
-
-"delete_in_context" - Указывает ключ который нужно удалить из контекста, если его не указать то вы результат 
-нажатия на эту кнопку изменит сообщение на предыдущее без выбора но выбор останеться в контексте, 
-для того чтобы очистить контекст от select нужно это явно указать
-
-"answer_id" это id answer где Текст сообщения: "Пример кнопки /buttons" который отрисовывает кнопки с возможностью выбора
-
-Шаблон ответа в answer, где Текст сообщения: "Пример кнопки /buttons"
-
-    {% for number in [1, 2, 3] %}
-        {% set _ = button_kwargs.append([{
-            "type_b": "i",
-            "arg_1": "Кнопка {number}".format(number=number), 
-            "select": False,
-            "unique_select_in_context": True,
-            "payload_internal": {'select': number},
-        }]) %}        
-    {% endfor %}
-    {% set _ = button_kwargs.append([{
-        "type_b": "i",
-        "arg_1": "Добавить в контекст",
-        "show_button_if": ["select"],
-        "answer_id": 14
-        }]) %}
-
-Результат работы будет выглядеть так:
-
-![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_34.jpg)
-
-Пагинация для только одного выбора:
-
-Шаблон ответа в answer, где Текст сообщения: "Пример кнопки /buttons"
-
     {% set numbers = [1, 2, 3, 4, 5, 6, 7] %}
+    {% set step = 2 %}
     {% if context.pagination %}
         {% set start = context.pagination.end  %}
-        {% set end =  start + 2 %}
+        {% set end =  start + step %}
     {% else %}
-        {% set start = 0  %}
-        {% set end =  2 %}
+        {% set start = 0 %}
+        {% set end = step %}
     {% endif %}
     {% set _ = context.update({"pagination":{"start": start, "end": end}}) %}
     {% for number in numbers[start:end] %}
@@ -535,12 +504,12 @@ button_kwargs - это список c кнопками такой структу
     {% endfor %}
     {% set _ = button_kwargs.append([{
         "type_b": "i",
-        "arg_1": "Добавить в контекст",
-        "show_button_if": ["select"],
-        "answer_id": 14,
-        "unique_in_context": True
+        "arg_1": "Продолжить",        
+        "show_button_if": ['select'],
+        "delete_in_context": ["pagination"],
+        "answer_id": 14
         }]) %}
-    {% if numbers[start:end]|length > 1 %}
+    {% if numbers[start:end]|length >= step %}
         {% set _ = button_kwargs.append([{
             "type_b": "i",
             "arg_1": "Ещё",        
@@ -548,16 +517,29 @@ button_kwargs - это список c кнопками такой структу
             }]) %}
     {% endif %}
 
-Отредактируйте запись, где Текст сообщения: "№{{ context.select }} Пример кнопки /buttons"
+Удалять кнопки в контексте, ссылающиеся на:
+    ☑ Пример кнопки /buttons
+    ☑ Вы выбрали кнопку: №{{ context.select }} Пример кнопки /buttons
+
+Отредактируйте запись, где Текст сообщения: "Вы выбрали кнопку: №{{ context.select }} Пример кнопки /buttons"
 
 Шаблон ответа:
 
     {% set _ = button_kwargs.append([{
             "type_b": "i",
             "arg_1": "Назад", 
-            "delete_in_context": ["select", "pagination"],
+            "delete_in_context": ["select"],
             "answer_id": 11
         }]) %}
+
+Результат выполнения при нажатии кнопки "ещё", кнопка "ещё" будет добавляться до тех пор, пока 
+в numbers не кончаться данные
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_36.jpg)
+
+Выбор будет только один во всём блоке сообщений, в случае выбора будет добавляться кнопка "продолжить"
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_37.jpg)
 
 Для множественного выбора убрать "unique_select_in_context": True, т.е в этом месте сделать вот так:
 
