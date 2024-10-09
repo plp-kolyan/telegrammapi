@@ -548,8 +548,13 @@ button_kwargs - это список c кнопками такой структу
 Создайте новый api метод http://127.0.0.1:8000/admin/message/api/add/
     
 Название метода: Номера
-Url: http://127.0.0.1:8000/api/get_numbers - оступен в браузере
+
+Url: http://127.0.0.1:8000/api/get_numbers 
+
+    доступен в браузере http://127.0.0.1:8000/api/get_numbers?start=2&end=4
+
 Метод: get
+
 Тело запроса:
 
     {% if not context.step %}
