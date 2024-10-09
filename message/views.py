@@ -18,3 +18,25 @@ def ai_chat(request):
 
         )
         return Response({"content": response.choices[0].message.content})
+
+
+@api_view(['GET'])
+def get_numbers(request):
+    numbers = [1, 2, 3, 4, 5, 6, 7]
+    start = request.query_params.get("start")
+    end = request.query_params.get("end")
+    if (start or end) is None:
+        return Response({"numbers": numbers[0:2]})
+
+    if start.isdigit() and end.isdigit():
+        return Response({"numbers": numbers[int(start):int(end)]})
+
+    else:
+        return Response({"numbers": numbers[0:2]})
+
+
+
+
+
+
+

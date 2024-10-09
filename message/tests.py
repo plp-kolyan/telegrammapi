@@ -412,6 +412,14 @@ class Test(IsolatedAsyncioTestCase):
         print(await get_response_json(url, payload, headers, method))
 
 
+    async def test_20(self):
+        headers = {}
+        payload = {"start": 2, "end": 4}
+        url = 'http://127.0.0.1:8000/api/get_numbers'
+        method = 'get'
+        print(await get_response_json(url, payload, headers, method))
+
+
 
 
 

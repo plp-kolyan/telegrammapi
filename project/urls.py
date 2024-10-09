@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from message.views import ai_chat
+from message.views import ai_chat, get_numbers
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/ai_chat', ai_chat)
+    path('api/ai_chat', ai_chat),
+    path('api/get_numbers', get_numbers)
 ]

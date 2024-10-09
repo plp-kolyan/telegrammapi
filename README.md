@@ -543,22 +543,110 @@ button_kwargs - это список c кнопками такой структу
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_37.jpg)
 
-Для множественного выбора убрать "unique_select_in_context": True, т.е в этом месте сделать вот так:
+## Запрос к тестовому api
 
+Создайте новый api метод http://127.0.0.1:8000/admin/message/api/add/
+    
+Название метода: Номера
+Url: http://127.0.0.1:8000/api/get_numbers - оступен в браузере
+Метод: get
+Тело запроса:
+
+    {% if not context.step %}
+        {% set _ = context.update({"step": 2}) %}
+    {% endif %}
+    {% if context.pagination %}
+        {% set start = context.pagination.end  %}
+        {% set end =  start + context.step %}
+    {% else %}
+        {% set start = 0 %}
+        {% set end = context.step %}
+    {% endif %}
+    {% set _ = context.update({"pagination":{"start": start, "end": end}}) %}
+    {%- set _ = payload.update(context.pagination) -%}
+
+Отредактируйте answer, где Текст сообщения: "Пример кнопки /buttons Пагинация c {{context.pagination.start}} до {{context.pagination.end  }}"
+
+Шаблон ответа:
+
+    {% set numbers = response_json.numbers %}    
+    {% for number in numbers %}
+        {% set _ = button_kwargs.append([{
+            "type_b": "i",
+            "arg_1": "Кнопка {number}".format(number=number), 
+            "select": False,
+            "unique_select_in_context": True,
+            "payload_internal": {'select': number},
+        }]) %}        
+    {% endfor %}
     {% set _ = button_kwargs.append([{
         "type_b": "i",
-        "arg_1": "Кнопка {number}".format(number=number), 
-        "select": False,        
-        "payload_internal": {'select': number},
-    }]) %}
+        "arg_1": "Продолжить",        
+        "show_button_if": ['select'],
+        "delete_in_context": ["pagination", "step"],
+        "answer_id": 14
+        }]) %}
+    {% if numbers|length >= context.step %}
+        {% set _ = button_kwargs.append([{
+            "type_b": "i",
+            "arg_1": "Ещё",        
+            "answer_id": 11,
+            }]) %}
+    {% endif %}
 
-Отредактируйте запись, где Текст сообщения: "№{{ context.select }} Пример кнопки /buttons"
-    Текст сообщения:
+Ответ из апи: Номера
+
+Результат работы будет выглядеть точно так же только уже номера кнопок будут приходить по API
+
+# Тот же пример во множественном выборе
+
+Для множественного выбора убрать "unique_select_in_context": True, т.е в этом месте сделать вот так:
+Отредактируйте answer, где Текст сообщения: "Пример кнопки /buttons Пагинация c {{context.pagination.start}} до {{context.pagination.end  }}"
+
+Шаблон ответа:
+
+    {% set numbers = response_json.numbers %}    
+    {% for number in numbers %}
+        {% set _ = button_kwargs.append([{
+            "type_b": "i",
+            "arg_1": "Кнопка {number}".format(number=number), 
+            "select": False,
+            "payload_internal": {'select': number},
+        }]) %}        
+    {% endfor %}
+    {% set _ = button_kwargs.append([{
+        "type_b": "i",
+        "arg_1": "Продолжить",        
+        "show_button_if": ['select'],
+        "delete_in_context": ["pagination", "step"],
+        "answer_id": 14
+        }]) %}
+    {% if numbers|length >= context.step %}
+        {% set _ = button_kwargs.append([{
+            "type_b": "i",
+            "arg_1": "Ещё",        
+            "answer_id": 11,
+            }]) %}
+    {% endif %}
+
+Отредактируйте запись, где Текст сообщения: "Вы выбрали кнопку: №{{ context.select }} Пример кнопки /buttons"
     
+Текст сообщения:
+
+    Вы выбрали кнопки:
     {% for select in context.selects %}
     "№{{ select }}
     {% endfor %}
     Пример кнопки /buttons
+
+Шаблон ответа:
+
+    {% set _ = button_kwargs.append([{
+            "type_b": "i",
+            "arg_1": "Назад", 
+            "delete_in_context": ["selects"],
+            "answer_id": 11
+        }]) %}
 
 
 
