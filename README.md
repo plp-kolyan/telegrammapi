@@ -252,16 +252,7 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 Добавьте новый Аnswer http://127.0.0.1:8000/admin/message/answer/add/
 
-Текст сообщения: Пример кнопки /buttons
-
-Шаблон ответа: 
-
-    {% set _ = button_kwargs.append([{
-                            "type_b": "i",
-                            "arg_1": "Самая простая кнопка",                       
-                        }]) %}
-
-Так же можно делать кнопки ссылки:
+Для того чтобы сделать кнопку ссылку:
 
 Шаблон ответа: 
 
@@ -272,6 +263,17 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
                         }]) %}
 
 ![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_38.jpg)
+
+Для обычной кнопки
+
+Текст сообщения: Пример кнопки /buttons
+
+Шаблон ответа: 
+
+    {% set _ = button_kwargs.append([{
+                            "type_b": "i",
+                            "arg_1": "Самая простая кнопка",                       
+                        }]) %}
 
 Проскрольте до Client messages и добавьте /buttons
 
