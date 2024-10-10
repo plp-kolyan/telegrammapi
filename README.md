@@ -261,7 +261,17 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
                             "arg_1": "Самая простая кнопка",                       
                         }]) %}
 
+Так же можно делать кнопки ссылки:
 
+Шаблон ответа: 
+
+    {% set _ = button_kwargs.append([{
+                            "type_b": "u",
+                            "arg_1": "Google",
+                            "arg_2": "https://www.google.com/",
+                        }]) %}
+
+![Image alt](https://github.com/plp-kolyan/telegrammapi/raw/master/img/Screenshot_38.jpg)
 
 Проскрольте до Client messages и добавьте /buttons
 
