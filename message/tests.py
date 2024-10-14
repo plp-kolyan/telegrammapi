@@ -404,7 +404,7 @@ class Test(IsolatedAsyncioTestCase):
 
     async def test_19(self):
         headers = {}
-        payload = {"model": "gpt-4-turbo",
+        payload = {"model": "gpt-4o-mini",
             'messages':[{"role": "user", "content": "Привет! Как дела?"}]
                    }
         url = 'http://127.0.0.1:8000/api/ai_chat'

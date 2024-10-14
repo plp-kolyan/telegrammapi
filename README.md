@@ -204,7 +204,7 @@ http://127.0.0.1:8000/admin/message/answer/ добавляем запись
     это необходимо для учитывания ИИ контекста: в базе это будет выглядеть вот так:
 
              {'payload': 
-                 {'model': 'gpt-4-turbo', 'messages': 
+                 {'model': 'gpt-4o-mini', 'messages': 
                   [{'role': 'user', 'content': 'привет'}, 
                   {'role': 'assistant', 'content': 'Привет! Чем могу помочь?'}]}}
     
