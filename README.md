@@ -250,6 +250,8 @@ answer находится по этой ссылке http://127.0.0.1:8000/admin
 
 <h2>Отрисовка кнопок</h2>
 
+Видео инструкция https://www.youtube.com/watch?v=hf2NKYdcQGA
+
 Добавьте новый Аnswer http://127.0.0.1:8000/admin/message/answer/add/
 
 
