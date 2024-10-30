@@ -4,7 +4,7 @@ import traceback
 from telethon.sync import TelegramClient, events, custom
 from message.models import Api, Answer, Mess, BotMess, ButtonsRow, Button, ClientMessage, Context, TelegrammUser
 from jinja2 import Template
-from serveses_config import api_id, api_hash, bot_token, sender_id
+from message.serveses_config import api_id, api_hash, bot_token, sender_id
 import aiohttp
 import asyncio
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
